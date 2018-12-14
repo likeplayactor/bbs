@@ -1,9 +1,19 @@
+from math import ceil
+
 from django.shortcuts import render, redirect
 from post.models import Post
 
 
 def post_list(request):
-    return render(request, 'post_list.html', {})
+    page = int(request.GET.get('page', 1))
+    per_page = 10
+    total = Post.objects.count()
+    pages = ceil(total / per_page)
+
+    start = (page - 1) * per_page
+    end = start + per_page
+    posts = Post.objects.all().order_by('-id')[start:end]
+    return render(request, 'post_list.html', {'posts': posts, 'pages': range(pages)})
 
 
 def create_post(request):
@@ -37,4 +47,6 @@ def read_post(request):
 
 
 def search(request):
-    return render(request, 'search.html')
+    keyword = request.POST.get('keyword')
+    posts = Post.objects.filter(content__contains=keyword)
+    return render(request, 'search.html', {'posts': posts})
