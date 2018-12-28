@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls import url
+from django.conf.urls.static import static
 
 from post import views as post_views
+from user import views as user_views
 
 urlpatterns = [
     url('post/list/', post_views.post_list),
@@ -25,4 +27,11 @@ urlpatterns = [
     url('post/read/', post_views.read_post),
     url('post/search/', post_views.search),
 
+    url('^user/register/', user_views.register),
+    url('^user/login/', user_views.login),
+    url('^user/logout/', user_views.logout),
+    url('^user/info/', user_views.user_info),
+
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
